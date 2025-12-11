@@ -582,4 +582,4 @@ const PropertyDatabase = () => {
   );
 };
 
-export default PropertyDatabase;
+export default PropertyDatabase
