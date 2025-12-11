@@ -25,13 +25,12 @@ const PropertyDatabase = () => {
   const [formAvailableFrom, setFormAvailableFrom] = useState('');
   const [formIsRental, setFormIsRental] = useState(false);
 
-  // API Configuration - n8n webhooks with CORS proxy
-  const CORS_PROXY = 'https://corsproxy.io/?';
+  // API Configuration - n8n webhooks
   const API_CONFIG = {
-    GET_ALL: CORS_PROXY + 'https://n8n-nikki-j977.onrender.com/webhook/a4fe9fac-7c6d-4ca1-8de0-83c240fa7ec5',
-    ADD_PROPERTY: CORS_PROXY + 'https://n8n-nikki-j977.onrender.com/webhook/411ba450-22c1-46e9-8eca-272d1b101d26',
-    UPDATE_PROPERTY: CORS_PROXY + 'https://n8n-nikki-j977.onrender.com/webhook/5a94a757-311c-4b99-82c6-6f72b5c1f898',
-    DELETE_PROPERTY: CORS_PROXY + 'https://n8n-nikki-j977.onrender.com/webhook/a10b094c-bcb8-493f-b74d-4eed90276286'
+    GET_ALL: 'https://n8n-nikki-j977.onrender.com/webhook/a4fe9fac-7c6d-4ca1-8de0-83c240fa7ec5',
+    ADD_PROPERTY: 'https://n8n-nikki-j977.onrender.com/webhook/411ba450-22c1-46e9-8eca-272d1b101d26',
+    UPDATE_PROPERTY: 'https://n8n-nikki-j977.onrender.com/webhook/5a94a757-311c-4b99-82c6-6f72b5c1f898',
+    DELETE_PROPERTY: 'https://n8n-nikki-j977.onrender.com/webhook/a10b094c-bcb8-493f-b74d-4eed90276286'
   };
 
   // Load properties on mount
@@ -44,21 +43,43 @@ const PropertyDatabase = () => {
     try {
       const response = await fetch(API_CONFIG.GET_ALL);
       const data = await response.json();
-      
-      console.log('API Response:', data); // Debug log
-      
-      // Handle different response formats
-      if (data.properties) {
-        setProperties(data.properties);
-      } else if (Array.isArray(data)) {
-        setProperties(data);
-      } else {
-        console.error('Unexpected response format:', data);
-        setProperties([]);
-      }
+      setProperties(data.properties || []);
     } catch (error) {
       console.error('Error loading properties:', error);
-      // Keep existing properties on error
+      // Fallback to demo data if API fails
+      const demoProperties = [
+        {
+          id: 'PROP001',
+          title: '3BHK Luxury Apartment',
+          type: 'apartment',
+          location: 'DLF Phase 5, Gurugram',
+          price: 25000000,
+          status: 'available',
+          bedrooms: 3,
+          bathrooms: 3,
+          area: 2100,
+          description: 'Spacious 3BHK apartment with modern amenities, modular kitchen, and premium fittings.',
+          features: 'Swimming Pool, Gym, Parking, Security, Power Backup, Park',
+          availableFrom: '2025-01-15',
+          isRental: false
+        },
+        {
+          id: 'PROP002',
+          title: '4BHK Independent Villa',
+          type: 'villa',
+          location: 'Sector 56, Gurugram',
+          price: 38000000,
+          status: 'available',
+          bedrooms: 4,
+          bathrooms: 4,
+          area: 3200,
+          description: 'Luxurious independent villa with private garden, modern architecture, and premium location.',
+          features: 'Private Garden, Parking for 3 cars, Security, Power Backup, Servant Quarter',
+          availableFrom: '2025-02-01',
+          isRental: false
+        }
+      ];
+      setProperties(demoProperties);
     }
     setLoading(false);
   };
@@ -582,4 +603,4 @@ const PropertyDatabase = () => {
   );
 };
 
-export default PropertyDatabase
+export default PropertyDatabase;
